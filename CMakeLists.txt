@@ -3,6 +3,7 @@ project(waypoint_list_maker)
 
 find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
+  nav_msgs
   roscpp
   std_srvs
   tf

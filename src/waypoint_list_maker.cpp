@@ -25,6 +25,8 @@
 
 #include "waypoint_list_maker/waypoint_list_maker.hpp"
 
+#include <nav_msgs/Path.h>
+
 #include <iostream>
 #include <fstream>
 
@@ -36,6 +38,7 @@ namespace waypoint_list_maker
 		  add_point_srv(nh_priv.advertiseService("add_point", &WaypointListMaker::addPointCallback, this)),
 		  clear_points_srv(nh_priv.advertiseService("clear_points", &WaypointListMaker::clearPointsCallback, this)),
 		  write_points_srv(nh_priv.advertiseService("write_points", &WaypointListMaker::writePointsCallback, this)),
+		  path_pub(nh.advertise<nav_msgs::Path>("path_in_progress", 1)),
 		  waypoint_list_filename("waypoint_list.txt"),
 		  frame_id("map"),
 		  child_frame_id("base_footprint")
@@ -81,6 +84,16 @@ namespace waypoint_list_maker
 		ROS_INFO("Adding a new waypoint at (%lf, %lf)", pose.pose.position.x, pose.pose.position.y);
 
 		waypoint_list.push_back(pose);
+
+		{
+			nav_msgs::PathPtr path(new nav_msgs::Path);
+
+			path->header.frame_id = frame_id;
+			path->header.stamp = ros::Time::now();
+			path->poses = waypoint_list;
+
+			path_pub.publish(path);
+		}
 
 		return true;
 	}

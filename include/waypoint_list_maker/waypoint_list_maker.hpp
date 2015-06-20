@@ -53,6 +53,8 @@ namespace waypoint_list_maker
 
 		tf::TransformListener listener;
 
+		ros::Publisher path_pub;
+
 		std::string waypoint_list_filename;
 		std::string frame_id;
 		std::string child_frame_id;
