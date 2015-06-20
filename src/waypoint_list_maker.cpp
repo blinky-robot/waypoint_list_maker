@@ -45,6 +45,8 @@ namespace waypoint_list_maker
 
 	bool WaypointListMaker::writeList(const char *filename) const
 	{
+		ROS_INFO("Writing waypoint list to '%s'", filename);
+
 		std::ofstream ofs(filename, std::ios::out|std::ios::binary);
 
 		uint32_t serial_size = ros::serialization::serializationLength(waypoint_list);
@@ -76,6 +78,8 @@ namespace waypoint_list_maker
 		tf::poseTFToMsg(transform, pose.pose);
 		pose.header.frame_id = frame_id;
 
+		ROS_INFO("Adding a new waypoint at (%lf, %lf)", pose.pose.position.x, pose.pose.position.y);
+
 		waypoint_list.push_back(pose);
 
 		return true;
@@ -83,6 +87,8 @@ namespace waypoint_list_maker
 
 	bool WaypointListMaker::clearPointsCallback(std_srvs::Empty::Request &req, std_srvs::Empty::Response &res)
 	{
+		ROS_INFO("Clearing the waypoint list...");
+
 		waypoint_list.clear();
 
 		return true;
